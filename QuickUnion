@@ -1,0 +1,123 @@
+import java.util.Arrays;
+public class QuickUnion implements DisjointSets {
+
+    private int parent[];
+    private int size;
+
+    public QuickUnion(int n) {
+        parent = new int[n];
+        Arrays.fill(parent, -1);
+    }
+
+
+    public void connect(int p, int q) {
+       /*
+          gets the original value thingy
+        */
+        int rootP = find(p);
+        int rootQ = find(q);
+        /*
+            checks if they're already connected
+            bc it messes up the size stuff
+         */
+        if(rootP == rootQ) {
+            return;
+        }
+        /*
+            adds on to the one that is longer
+            ( aka: more negative )
+            and adds on to it's size
+         */
+        if (parent[rootP] <= parent[rootQ]) {
+            parent[rootP] += parent[rootQ];
+            parent[rootQ] = rootP;
+        } else {
+            parent[rootQ] += parent[rootP];
+            parent[rootP] = rootQ;
+        }
+    }
+
+//    useless:
+//    public void connect(int p, int q){
+//        if ( parent[find(p)] < parent[find(q)]){
+//            //parent[find(q)] = find(p);
+//            parent[find(q)] = p;
+//            parent[find(p)]=-1;
+//        }
+//        else if(parent[find(q)] < parent[find(p)]){
+//            parent[find(q)] = find(p);
+//            //parent[find(q)] = p;
+//            parent[find(p)]=-1;
+//
+//        }
+//        else if (p > q) {
+//            parent[find(p)] = find(q);
+//            //parent[find(p)] = q;
+//            parent[find(q)] = -1;
+//        }
+//        else {
+//            parent[find(p)] = q;
+//            //parent[find(q)] = parent[find(p)];
+//            parent[find(p)] =-1;
+//        }
+//    }
+
+
+
+
+
+    public boolean isConnected(int p, int q){
+        return (find(p) == find(q));
+    }
+
+    private int find(int p){
+//        while( parent[p]>= 0){
+//            p = parent[p];
+//        }
+//        return p;
+        int origin = p;
+        /*
+            This goes through the first time
+         and gets the root / original node thingy
+         */
+        while (parent[origin] >= 0) {
+            origin = parent[origin];
+        }
+        while (p != origin) {
+            int next = parent[p];
+            parent[p] = origin;
+            p = next;
+        }
+        return origin;
+    }
+
+    public static void main(String[] args) {
+        QuickUnion qu = new QuickUnion(12);
+        qu.connect(0, 1);
+        qu.connect(1, 2);
+        qu.connect(3, 4);
+        qu.connect(2, 3);
+        qu.connect(6, 7);
+        qu.connect(7, 8);
+        qu.connect(8, 9);
+        qu.connect(9, 10);
+        qu.connect(6, 5);
+        qu.connect(3,11);
+        qu.connect(2,10);
+
+
+        System.out.println(qu.isConnected(0, 1));
+        qu.isConnected(1, 2);
+        qu.isConnected(2, 3);
+        qu.isConnected(3, 4);
+        qu.isConnected(4, 5);
+        qu.isConnected(5, 6);
+        qu.isConnected(6, 7);
+        qu.isConnected(7, 8);
+        qu.isConnected(8, 9);
+        qu.isConnected(9, 10);
+
+        //qu.connect(3, 4);
+
+    }
+}
